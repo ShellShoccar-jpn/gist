@@ -59,7 +59,7 @@ cat <<PREVIOUS_HTML
 <html>
 <head>
 <meta name="generator" content="HTML Tidy, see www.w3.org">
-<link type="text/css" rel="stylesheet" href="${BASE_URL}utilities/style.css">
+<link type="text/css" rel="stylesheet" href="${BASE}utilities/style.css">
 <title>Utilities</title>
 </head>
 <body bgcolor="white">
