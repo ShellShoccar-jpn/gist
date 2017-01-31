@@ -1,10 +1,10 @@
-#! /bin/sh
+#!/bin/sh
  
 ######################################################################
 #
 # APALOGNORM : a normalizer for logs of the Apache combined format
 #
-# Written by Rich Mikan (richmikan[at]richlab.org) at 2014/01/04
+# Written by Rich Mikan (richmikan[at]richlab.org) at 2017/01/31
 #
 # Usage  : apalognorm [-s string] <logfile>
 #          <logfile> should be written with Apache combine format.
@@ -20,16 +20,19 @@
  
 # definition: print the usage and exit
 print_usage_and_exit () {
-  cat <<-__USAGE 1>&2
+  cat <<-USAGE 1>&2
 	Usage   : ${0##*/} [-s string] <logfile>
 	          <logfile> should be written with Apache combine format.
 	          -s  Set the alternative character you want convert from
 	              the space character. (default is "_")
 	Version : Mon May  5 11:28:22 JST 2014
-__USAGE
+	USAGE
   exit 1
 }
- 
+
+# initialization
+PATH="$(command -p getconf PATH):${PATH:-}"
+
 # parse the arguments
 s_opt='_'
 file=''
@@ -63,11 +66,11 @@ for arg in "$@"; do
     print_usage_and_exit
   fi
 done
-if [ \( ! -f "$file"     \) -a \
-     \( ! -c "$file"     \) -a \
-     \( ! -p "$file"     \) -a \
-     \( "_$file" != '_-' \) -a \
-     \( ! -z "$file"     \)    ]; then
+if [ ! -f "$file"     ] &&
+   [ ! -c "$file"     ] &&
+   [ ! -p "$file"     ] &&
+   [ "_$file" != '_-' ] &&
+   [ ! -z "$file"     ]; then
   echo "${0##*/}: No such file found" 1>&2
   print_usage_and_exit
 elif [ -z "$file" ]; then
@@ -76,8 +79,7 @@ fi
  
  
 # convert the substitute string for setting to the sed command
-sub=$(echo "_$s_opt"           |
-      sed '1s/^_//'            |
+sub=$(printf '%s\n' "$s_opt"   |
       sed 's/\([\&/]\)/\\\1/g' )
  
 # Define some marks for converting
@@ -85,13 +87,13 @@ RS=$(printf '\036')             # a mark for the real new lines
 LF=$(printf '\\\n_');LF=${LF%_} # LF for the sed command
  
 # Convert the file
-if [ "_$file" = '_-' ]; then               #
-  sed 's/^\(.*\)$/\1'"$RS"'/'              #
-else                                       #
-  sed 's/^\(.*\)$/\1'"$RS"'/' "$file"      #
-fi                                         |
-sed 's/"\([^"]*\)"/'"$LF"'"\1"'"$LF"'/g'   |
-sed 's/\[\([^]]*\)\]/'"$LF"'[\1]'"$LF"'/g' |
-sed '/^["[]/s/[[:blank:]]/'"$sub"'/g'      |
-tr -d '\n'                                 |
+if [ "_$file" = '_-' ]; then                      #
+  sed 's/^\(.*\)$/\1'"$RS"'/' 2>/dev/null         #
+else                                              #
+  sed 's/^\(.*\)$/\1'"$RS"'/' "$file" 2>/dev/null #
+fi                                                |
+sed 's/"\([^"]*\)"/'"$LF"'"\1"'"$LF"'/g'          |
+sed 's/\[\([^]]*\)\]/'"$LF"'[\1]'"$LF"'/g'        |
+sed '/^["[]/s/[[:blank:]]/'"$sub"'/g'             |
+tr -d '\n'                                        |
 tr "$RS" '\n'
