@@ -1,4 +1,4 @@
-#! /bin/sh
+#!/bin/sh
 
 ######################################################################
 #
@@ -17,7 +17,7 @@
 #
 # Required : One of HTTP-GET command (wget or curl or fetch)
 #
-# Written by Rich Mikan (richmikan[at]richlab.org) on 2015/09/12
+# Written by Rich Mikan (richmikan[at]richlab.org) on 2017/01/31
 #
 # This is a public-domain software. It measns that all of the people
 # can use this with no restrictions at all. By the way, I am fed up
@@ -27,12 +27,14 @@
 
 
 # ====================================================================
-# configure (SET THIS)
+# configure
 # ====================================================================
 
+# --- POSIX document location (SET THIS) ---
 BASE='http://pubs.opengroup.org/onlinepubs/9699919799/'
 CMDs='idx/utilities.html'
-
+# --- Others ---
+PATH="$(command -p getconf PATH):${PATH:-}"
 
 # ====================================================================
 # make sure some depend non-POSIX commands (One of HTTP-GET required)
