@@ -15,7 +15,8 @@ type pushd >/dev/null 2>&1 || pushd() {
                 print "~" substr(dir,p+hd_len);             #
               }                                          }' |
   tr '\n' ' '                                               |
-  grep ''
+  grep ''                                                   |
+  sed 's/ $//'
 }
 
 type popd >/dev/null 2>&1 || popd() {
@@ -37,5 +38,6 @@ type popd >/dev/null 2>&1 || popd() {
                 print "~" substr(dir,p+hd_len);             #
               }                                          }' |
   tr '\n' ' '                                               |
-  grep ''
+  grep ''                                                   |
+  sed 's/ $//'
 }
