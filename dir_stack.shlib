@@ -1,7 +1,7 @@
 type pushd >/dev/null 2>&1 || pushd() {
   case "${DIR_STACK:-}" in '') DIR_STACK=$(pwd);; esac
   cd "$1" >/dev/null 2>&1 || {
-    echo "$0: pushd: $1: No such file or directory" 1>&2
+    echo "${0##*/}: pushd: $1: No such file or directory" 1>&2
     return 1
   }
   DIR_STACK=$(printf '%s\n%s' "$(pwd)" "$DIR_STACK")
@@ -22,9 +22,9 @@ type pushd >/dev/null 2>&1 || pushd() {
 type popd >/dev/null 2>&1 || popd() {
   set -- "$(printf '%s\n' "${DIR_STACK:-}" | tail -n +2)"
   set -- "$1" "$(printf '%s\n' "$1" | head -n 1)"
-  case "$2" in '') echo "$0: popd: directory stack empty" 1>&2; return 1;; esac
+  case "$2" in '') echo "${0##*/}: popd: directory stack empty" 1>&2; return 1;; esac
   cd "$2" >/dev/null 2>&1 || {
-    echo "$0: popd: $1: No such file or directory" 1>&2
+    echo "${0##*/}: popd: $1: No such file or directory" 1>&2
     return 1
   }
   DIR_STACK=$1
