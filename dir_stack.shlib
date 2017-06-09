@@ -11,7 +11,7 @@ type pushd >/dev/null 2>&1 || pushd() {
               while (getline dir) {                         #
                 if (homedir == "") {print dir; continue;}   #
                 pos  =index(dir,homedir);                   #
-                if (pos     ==  0) {print dir; continue;}   #
+                if (pos     !=  1) {print dir; continue;}   #
                 print "~" substr(dir,pos+hd_len);           #
               }                                          }' |
   tr '\n' ' '                                               |
@@ -34,7 +34,7 @@ type popd >/dev/null 2>&1 || popd() {
               while (getline dir) {                         #
                 if (homedir == "") {print dir; continue;}   #
                 pos  =index(dir,homedir);                   #
-                if (pos     ==  0) {print dir; continue;}   #
+                if (pos     !=  1) {print dir; continue;}   #
                 print "~" substr(dir,pos+hd_len);           #
               }                                          }' |
   tr '\n' ' '                                               |
