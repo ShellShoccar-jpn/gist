@@ -10,9 +10,9 @@ type pushd >/dev/null 2>&1 || pushd() {
               hd_len =length(homedir);                      #
               while (getline dir) {                         #
                 if (homedir == "") {print dir; continue;}   #
-                p=index(dir,homedir);                       #
-                if (p       ==  0) {print dir; continue;}   #
-                print "~" substr(dir,p+hd_len);             #
+                pos  =index(dir,homedir);                   #
+                if (pos     ==  0) {print dir; continue;}   #
+                print "~" substr(dir,pos+hd_len);           #
               }                                          }' |
   tr '\n' ' '                                               |
   grep ''                                                   |
@@ -33,9 +33,9 @@ type popd >/dev/null 2>&1 || popd() {
               hd_len =length(homedir);                      #
               while (getline dir) {                         #
                 if (homedir == "") {print dir; continue;}   #
-                p=index(dir,homedir);                       #
-                if (p       ==  0) {print dir; continue;}   #
-                print "~" substr(dir,p+hd_len);             #
+                pos  =index(dir,homedir);                   #
+                if (pos     ==  0) {print dir; continue;}   #
+                print "~" substr(dir,pos+hd_len);           #
               }                                          }' |
   tr '\n' ' '                                               |
   grep ''                                                   |
