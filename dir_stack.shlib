@@ -10,10 +10,10 @@ type pushd >/dev/null 2>&1 || pushd() {
          homedir=ENVIRON["HOME"];                                           #
          hd_len =length(homedir);                                           #
          while (getline dir) {                                              #
-           if (homedir == "") {print dir; continue;}                        #
+           if  (homedir == "")                       {print dir; continue;} #
            if ((homedir == "/") && (homedir != dir)) {print dir; continue;} #
            pos  =index(dir,homedir);                                        #
-           if (pos     !=  1) {print dir; continue;}                        #
+           if  (pos     !=  1)                       {print dir; continue;} #
            print "~" substr(dir,pos+hd_len);                                #
          }                                                                  #
        }'                                                                   |
@@ -36,10 +36,10 @@ type popd >/dev/null 2>&1 || popd() {
          homedir=ENVIRON["HOME"];                                           #
          hd_len =length(homedir);                                           #
          while (getline dir) {                                              #
-           if (homedir == "") {print dir; continue;}                        #
+           if  (homedir == "")                       {print dir; continue;} #
            if ((homedir == "/") && (homedir != dir)) {print dir; continue;} #
            pos  =index(dir,homedir);                                        #
-           if (pos     !=  1) {print dir; continue;}                        #
+           if  (pos     !=  1)                       {print dir; continue;} #
            print "~" substr(dir,pos+hd_len);                                #
          }                                                                  #
        }'                                                                   |
