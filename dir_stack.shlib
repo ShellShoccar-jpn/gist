@@ -1,12 +1,17 @@
 type pushd >/dev/null 2>&1 || pushd() {
+  # === Initialize ===================================================
   case "${DIR_STACK:-}" in '') DIR_STACK=$(pwd);; esac
+  # === Try to change directory ======================================
   cd "$1" >/dev/null 2>&1 || {
     echo "${0##*/}: pushd: $1: No such file or directory" 1>&2
     return 1
   }
+  # === Push the directory stack =====================================
   DIR_STACK=$(printf '%s\n%s' "$(pwd)" "$DIR_STACK")
+  # === Print the contents in the stack ==============================
   printf '%s' "$DIR_STACK"                                                     |
-  awk 'BEGIN {homedir=ENVIRON["HOME"];                                         #
+  awk '# --- Replace the prefix of the homedirectory path with "~" if possible #
+       BEGIN {homedir=ENVIRON["HOME"];                                         #
               hd_len =length(homedir);                                         #
               while (getline dir) {                                            #
                 if ( homedir == ""                  ) {print dir; continue;}   #
@@ -21,16 +26,21 @@ type pushd >/dev/null 2>&1 || pushd() {
 }
 
 type popd >/dev/null 2>&1 || popd() {
+  # === Initialize ===================================================
   set -- "$(printf '%s\n' "${DIR_STACK:-}" | tail -n +2)"
   set -- "$1" "$(printf '%s\n' "$1" | head -n 1)"
   case "$2" in '') echo "${0##*/}: popd: directory stack empty" 1>&2; return 1;; esac
+  # === Try to change directory to the top of the stack ==============
   cd "$2" >/dev/null 2>&1 || {
     echo "${0##*/}: popd: $1: No such file or directory" 1>&2
     return 1
   }
+  # === Pop the directory stack ======================================
   DIR_STACK=$1
+  # === Print the contents in the stack ==============================
   printf '%s\n' "$1"                                                           |
-  awk 'BEGIN {homedir=ENVIRON["HOME"];                                         #
+  awk '# --- Replace the prefix of the homedirectory path with "~" if possible #
+       BEGIN {homedir=ENVIRON["HOME"];                                         #
               hd_len =length(homedir);                                         #
               while (getline dir) {                                            #
                 if ( homedir == ""                  ) {print dir; continue;}   #
